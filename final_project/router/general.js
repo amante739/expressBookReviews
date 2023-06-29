@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require("axios");
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
@@ -23,7 +24,7 @@ public_users.post("/register", (req, res) => {
   //return res.status(300).json({message: "Yet to be implemented"});
 });
 
-// Get the book list available in the shop
+// Task 1 Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
   res.send(JSON.stringify(books,null,4));
@@ -31,7 +32,18 @@ public_users.get('/',function (req, res) {
   //return res.status(200).json({message: "Yet to be implemented"});
 });
 
-// Get book details based on ISBN
+// TASK 10 - Get the book list available in the shop using  async-await with Axios 
+public_users.get("/book", async function (req, res) {
+  try {
+    const response = await axios.get("http://localhost:5000");
+    const books = response.data;
+    res.send(JSON.stringify(books, null, 4));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+// Task 2 Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
 
@@ -40,7 +52,21 @@ public_users.get('/isbn/:isbn',function (req, res) {
     //return res.status(300).json({message: "Yet to be implemented"});
  });
   
-// Get book details based on author
+// TASK 11 - Get book details based on ISBN  async-await with Axios 
+public_users.get("/book/:isbn", async function (req, res) {
+  const { isbn } = req.params;
+
+  try {
+    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    const book = response.data;
+    res.send(JSON.stringify(book, null, 4));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+//Task 3 Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
   let authorParam=req.params.author;
@@ -53,12 +79,25 @@ public_users.get('/author/:author',function (req, res) {
     }
   });
   
-  
-
   //return res.status(300).json({message: "Yet to be implemented"});
 });
+// TASK 12 - Get book details based on Author async-await with Axios 
+public_users.get("/book/author/:author", async function (req, res) {
+  const { author } = req.params;;
 
-// Get all books based on title
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/author/${author}`
+    );
+    
+    const book = response.data;
+    res.send(JSON.stringify(book, null, 4));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+//Task 4 Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     let titleParam=req.params.title;
     let bookKeys = Object.keys(books);  
@@ -71,7 +110,22 @@ public_users.get('/title/:title',function (req, res) {
     });
  // return res.status(300).json({message: "Yet to be implemented"});
 });
+// TASK 13 - Get book details based on Author async-await with Axios 
+public_users.get("/book/title/:title", async function (req, res) {
+  const { title } = req.params;;
 
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/title/${title}`
+    );
+    
+    const book = response.data;
+    res.send(JSON.stringify(book, null, 4));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
   //Write your code here
@@ -79,18 +133,7 @@ public_users.get('/review/:isbn',function (req, res) {
   const book=books[isbnParam];
   const reviews = book.reviews; // Accessing the reviews object
  res.send(reviews);
-//console.log(reviews);
-    //console.log(book.review);
-    //let bookKeys = Object.keys(book);  
-    //bookKeys.forEach((key) => {
-    //  const bk = book[key];
-     // if (book.title === titleParam) {
-        //matchingBooks.push(book);
-     //   console.log(bk.reviews);
-      //  res.send(bk.review);
-     // }
-   // });
-  //return res.status(300).json({message: "Yet to be implemented"});
+
 });
 
 module.exports.general = public_users;
