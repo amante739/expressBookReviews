@@ -32,7 +32,7 @@ const authenticatedUser = (username, password) => {
   //write code to check if username and password match the one we have in records.
 }
 
-//only registered users can login
+//Task 7 only registered users can login
 regd_users.post("/login", (req, res) => {
   //Write your code here
   const username = req.body.username;
@@ -54,7 +54,7 @@ regd_users.post("/login", (req, res) => {
     //return res.status(300).json({message: "Yet to be implemented"});
 });
 
-// Add a book review
+//Task 8  Add or update a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
 
   const { isbn } = req.params;
@@ -92,7 +92,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 });
 
 //
-//delete book review
+//Task 9 delete book review
 
 regd_users.delete("/auth/review/:isbn", (req, res) => {
     const { isbn } = req.params;
